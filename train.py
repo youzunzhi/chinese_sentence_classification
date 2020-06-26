@@ -17,20 +17,22 @@ cfg.DATASET_NAME = 'flight'
 cfg.FILTER_NUM = 100
 cfg.FILTER_SIZE = [3, 4, 5]
 cfg.EMBEDDING_DIM = 128
-cfg.PRETRAINED_EMBEDDING = False
+cfg.PRETRAINED_EMBEDDING = True
 cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
 cfg.FINETUNE_EMBEDDING = False
 cfg.MULTICHANNEL = False    # use 2 channels of word embedding
 cfg.DROPOUT_RATE = 0.5
 cfg.TOTAL_EPOCHS = 256
 cfg.LR = 0.001
+cfg.EXPERIMENT_NAME = f'pretrain'
+
 # ---------
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("opts", help="Modify configs using the command-line", default=None, nargs=argparse.REMAINDER)
 args = parser.parse_args()
 cfg.merge_from_list(args.opts)
 # ---------
-cfg.EXPERIMENT_NAME = f'{cfg.DATASET_NAME}_baseline'
+cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
 cfg.OUTPUT_DIR = f'outputs/{cfg.EXPERIMENT_NAME}'
 
 os.makedirs('outputs/', exist_ok=True)

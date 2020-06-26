@@ -15,13 +15,16 @@ def get_data_iter(cfg):
     if cfg.PRETRAINED_EMBEDDING:
         vectors = load_word_vectors(cfg.PRETRAINED_PATH)
         text_field.build_vocab(train_dataset, val_dataset, test_dataset, vectors=vectors)
+        cfg.EMBEDDING_DIM = text_field.vocab.vectors.size()[-1]
+        cfg.VECTORS = text_field.vocab.vectors
     else:
         text_field.build_vocab(train_dataset, val_dataset, test_dataset)
     label_field.build_vocab(train_dataset, val_dataset, test_dataset)
     cfg.VOCABULARY_SIZE = len(text_field.vocab)
+
     train_dataiter, val_dataiter, test_dataiter = data.Iterator.splits(
         (train_dataset, val_dataset, test_dataset),
-        batch_sizes=(cfg.BATCH_SIZE, cfg.BATCH_SIZE, cfg.BATCH_SIZE),
+        batch_sizes=(cfg.BATCH_SIZE, 1, 1),
         sort_key=lambda x: len(x.text),
         repeat=False,
         shuffle=True)
