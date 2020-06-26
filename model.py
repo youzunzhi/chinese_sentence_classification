@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class TextCNN(nn.Module):
-    def __init__(self, cfg):
+    def __init__(self, cfg, embedding_vectors):
         super(TextCNN, self).__init__()
         self.cfg = cfg
 
@@ -17,7 +17,7 @@ class TextCNN(nn.Module):
         embedding_dim = cfg.EMBEDDING_DIM
         self.embedding = nn.Embedding(vocabulary_size, embedding_dim)
         if cfg.PRETRAINED_EMBEDDING:
-            self.embedding = self.embedding.from_pretrained(cfg.VECTORS, freeze=not cfg.FINETUNE_EMBEDDING)
+            self.embedding = self.embedding.from_pretrained(embedding_vectors, freeze=not cfg.FINETUNE_EMBEDDING)
         if cfg.MULTICHANNEL:
             self.embedding2 = nn.Embedding(vocabulary_size, embedding_dim).from_pretrained(cfg.VECTORS, freeze=True)
             channel_num += 1

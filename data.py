@@ -16,7 +16,6 @@ def get_data_iter(cfg):
         vectors = load_word_vectors(cfg.PRETRAINED_PATH)
         text_field.build_vocab(train_dataset, val_dataset, test_dataset, vectors=vectors)
         cfg.EMBEDDING_DIM = text_field.vocab.vectors.size()[-1]
-        cfg.VECTORS = text_field.vocab.vectors
     else:
         text_field.build_vocab(train_dataset, val_dataset, test_dataset)
     label_field.build_vocab(train_dataset, val_dataset, test_dataset)
@@ -28,7 +27,7 @@ def get_data_iter(cfg):
         sort_key=lambda x: len(x.text),
         repeat=False,
         shuffle=True)
-    return train_dataiter, val_dataiter, test_dataiter
+    return train_dataiter, val_dataiter, test_dataiter, text_field.vocab.vectors
 
 
 def load_word_vectors(model_fname):

@@ -40,8 +40,8 @@ setup_logger(cfg, 't')
 
 
 def main():
-    train_dataiter, val_dataiter, test_dataiter = get_data_iter(cfg)
-    model = TextCNN(cfg)
+    train_dataiter, val_dataiter, test_dataiter, embedding_vectors = get_data_iter(cfg)
+    model = TextCNN(cfg, embedding_vectors)
     if cfg.CUDA:
         model.cuda()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.LR)
