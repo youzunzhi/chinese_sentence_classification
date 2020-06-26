@@ -23,7 +23,7 @@ def get_data_iter(cfg):
 
     train_dataiter, val_dataiter, test_dataiter = data.Iterator.splits(
         (train_dataset, val_dataset, test_dataset),
-        batch_sizes=(cfg.BATCH_SIZE, 1, 1),
+        batch_sizes=(cfg.BATCH_SIZE, len(val_dataset), len(test_dataset)),
         sort_key=lambda x: len(x.text),
         repeat=False,
         shuffle=True)
