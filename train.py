@@ -46,14 +46,14 @@ def main():
         model.cuda()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.LR)
 
-    best_acc = 0
+    best_acc, best_test_acc = 0, 0
+    not_improving_epochs = 0
     for epoch in range(1, cfg.TOTAL_EPOCHS + 1):
         model.train()
         for batch_i, batch in enumerate(train_dataiter):
             start_time = time.time()
             feature, target = batch.text, batch.label
             feature = feature.data.t()
-            # target = target.data.sub(1)
             if cfg.CUDA:
                 feature, target = feature.cuda(), target.cuda()
             optimizer.zero_grad()
@@ -65,31 +65,38 @@ def main():
             train_acc = 100.0 * corrects_num / batch.batch_size
             log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
                      f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
-        eval_acc = evaluate(cfg, model, val_dataiter)
+        eval_acc = evaluate('val', model, val_dataiter, cfg.CUDA)
         if best_acc < eval_acc:
             best_acc = eval_acc
-            save_model_weights(model, cfg)
-    evaluate(cfg, model, test_dataiter)
+            save_model_weights(model, cfg, epoch)
+            best_test_acc = evaluate('test', model, test_dataiter, cfg.CUDA)
+            not_improving_epochs = 0
+        elif not_improving_epochs >= 10:
+            log_info(f'Early stop, Test Acc with best model: {best_test_acc}')
+            break
+        else:
+            not_improving_epochs += 1
+        log_info(f'Early stop, Test Acc with best model: {best_test_acc}')
 
 
-def evaluate(cfg, model, eval_dataiter):
+def evaluate(split, model, eval_dataiter, use_cuda):
     model.eval()
     corrects_num = 0
     for batch in tqdm.tqdm(eval_dataiter, desc='EVALUATING'):
         feature, target = batch.text, batch.label
         feature = feature.data.t()
-        # target = target.data.sub(1)
-        if cfg.CUDA:
+        if use_cuda:
             feature, target = feature.cuda(), target.cuda()
         logits = model(feature)
         corrects_num += (torch.max(logits, 1)[1].view(target.size()).data == target.data).sum()
     size = len(eval_dataiter.dataset)
     accuracy = 100.0 * corrects_num / size
-    log_info(f"EVALUATION:\nACC {accuracy}({corrects_num}/{size})")
+    log_info(f"Eval on {split}: ACC {accuracy}({corrects_num}/{size})")
     return accuracy
 
 
-def save_model_weights(model, cfg):
+def save_model_weights(model, cfg, epoch):
+    log_info(f'saving best model of epoch {epoch}')
     torch.save(model.state_dict(), os.path.join(cfg.OUTPUT_DIR, f'model_best.pth'))
 
 
