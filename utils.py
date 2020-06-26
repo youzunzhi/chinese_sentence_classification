@@ -62,3 +62,17 @@ def setup_logger(cfg, log_prefix, distributed_rank=0):
 
 def log_info(log_str):
     logging.getLogger().info(log_str)
+
+
+def make_csv(dataset, split):
+    ori_path = f'dataset/{dataset}/{dataset}_{split}'
+    with open(ori_path, 'r') as fr:
+        with open(f'dataset/{dataset}/{dataset}_{split}.csv', 'w') as f:
+            for l in fr.readlines():
+                write_line = l[0] + ',' + l[2:]
+                f.write(write_line)
+
+
+# for d in ['flight', 'laptop', 'movie']:
+#     for s in ['train', 'val', 'test']:
+#         make_csv(d, s)

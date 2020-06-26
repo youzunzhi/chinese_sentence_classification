@@ -65,6 +65,7 @@ def main():
             train_acc = 100.0 * corrects_num / batch.batch_size
             log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
                      f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
+            # break
         eval_acc = evaluate(cfg, model, val_dataiter)
         if best_acc < eval_acc:
             best_acc = eval_acc
