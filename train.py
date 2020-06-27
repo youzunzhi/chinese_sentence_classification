@@ -13,7 +13,7 @@ torch.manual_seed(0)
 cfg = CN()
 cfg.CUDA = torch.cuda.is_available()
 cfg.BATCH_SIZE = 64
-cfg.DATASET_NAME = 'movie'
+cfg.DATASET_NAME = 'laptop'
 cfg.FILTER_NUM = 100
 cfg.FILTER_SIZE = [3, 4, 5]
 cfg.EMBEDDING_DIM = 128
