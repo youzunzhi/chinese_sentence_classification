@@ -71,7 +71,7 @@ def main():
         corrects_num += (torch.max(logits, 1)[1].view(target.size()).data == target.data).sum()
     size = len(test_dataiter.dataset)
     accuracy = 100.0 * corrects_num / size
-    log_info(f"Eval on test: ACC {accuracy}({corrects_num}/{size})")
+    print(f"Eval on test: ACC {accuracy}({corrects_num}/{size})")
     return accuracy
 
 
