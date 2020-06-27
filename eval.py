@@ -12,6 +12,12 @@ torch.manual_seed(0)
 cfg = CN()
 cfg.CUDA = torch.cuda.is_available()
 cfg.DATASET_NAME = 'movie'
+cfg.EMBEDDING_DIM = 128
+cfg.PRETRAINED_EMBEDDING = True
+cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
+cfg.FINETUNE_EMBEDDING = False
+cfg.MULTICHANNEL = False    # use 2 channels of word embedding
+cfg.DROPOUT_RATE = 0.5
 cfg.EXPERIMENT_NAME = f''
 # ---------
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -19,6 +25,23 @@ parser.add_argument("opts", help="Modify configs using the command-line", defaul
 args = parser.parse_args()
 cfg.merge_from_list(args.opts)
 # ---------
+if cfg.EXPERIMENT_NAME == 'baseline':
+    cfg.PRETRAINED_EMBEDDING = False
+    cfg.FINETUNE_EMBEDDING = False
+    cfg.MULTICHANNEL = False
+elif cfg.EXPERIMENT_NAME == 'pretrain':
+    cfg.PRETRAINED_EMBEDDING = True
+    cfg.FINETUNE_EMBEDDING = False
+    cfg.MULTICHANNEL = False
+elif cfg.EXPERIMENT_NAME == 'pretrain_finetune':
+    cfg.PRETRAINED_EMBEDDING = True
+    cfg.FINETUNE_EMBEDDING = True
+    cfg.MULTICHANNEL = False
+elif cfg.EXPERIMENT_NAME == 'multichannel':
+    cfg.PRETRAINED_EMBEDDING = True
+    cfg.FINETUNE_EMBEDDING = True
+    cfg.MULTICHANNEL = True
+
 cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
 cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
 
