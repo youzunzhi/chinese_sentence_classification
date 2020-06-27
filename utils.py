@@ -70,9 +70,12 @@ def make_csv(dataset, split):
         with open(f'dataset/{dataset}/{dataset}_{split}.csv', 'w') as f:
             for l in fr.readlines():
                 write_line = l[0] + ',' + l[2:]
+                write_line = write_line.replace('"', '"""')
                 f.write(write_line)
 
 
-# for d in ['flight', 'laptop', 'movie']:
-#     for s in ['train', 'val', 'test']:
-#         make_csv(d, s)
+"""
+for d in ['flight', 'laptop', 'movie']:
+    for s in ['train', 'val', 'test']:
+        make_csv(d, s)
+"""
