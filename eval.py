@@ -70,7 +70,8 @@ def main():
             print(f'{torch.argmax(logits[idx]).cpu().detach().numpy()}({target[idx]})', end=' ')
             itos = test_dataiter.dataset.fields['text'].vocab.itos
             for i in feature[idx].cpu().detach().numpy():
-                print(itos[i], end='')
+                if i != 1:
+                    print(itos[i], end='')
             print()
         corrects_num += (torch.max(logits, 1)[1].view(target.size()).data == target.data).sum()
     size = len(test_dataiter.dataset)
