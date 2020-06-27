@@ -85,8 +85,9 @@ def make_csv(dataset, split):
     with open(ori_path, 'r') as fr:
         with open(f'dataset/{dataset}/{dataset}_{split}.csv', 'w') as f:
             for l in fr.readlines():
+                write_line = l.replace(',', '，')
                 write_line = l[0] + ',' + l[2:]
-                write_line = write_line.replace('"', '"""')
+                write_line = write_line.replace('"', '')
                 f.write(write_line)
 
 
