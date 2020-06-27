@@ -43,6 +43,8 @@ elif cfg.EXPERIMENT_NAME == 'multichannel':
     cfg.PRETRAINED_EMBEDDING = True
     cfg.FINETUNE_EMBEDDING = True
     cfg.MULTICHANNEL = True
+else:
+    raise NotImplementedError
 cfg.BATCH_SIZE = 64     # useless
 cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
 cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
@@ -50,7 +52,7 @@ print(cfg)
 
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)
-    model = TextCNN(cfg, embedding_vectors)
+    model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
     if cfg.CUDA:
         model.cuda()
     model.eval()
