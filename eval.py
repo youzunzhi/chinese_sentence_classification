@@ -81,9 +81,4 @@ def main():
 
 
 if __name__ == '__main__':
-    try:
-        main()
-    except KeyboardInterrupt:
-        handle_keyboard_interruption(cfg)
-    except:
-        handle_other_exception(cfg)
+    main()
