@@ -41,7 +41,7 @@ elif cfg.EXPERIMENT_NAME == 'multichannel':
     cfg.PRETRAINED_EMBEDDING = True
     cfg.FINETUNE_EMBEDDING = True
     cfg.MULTICHANNEL = True
-
+cfg.BATCH_SIZE = 64     # useless
 cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
 cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
 
