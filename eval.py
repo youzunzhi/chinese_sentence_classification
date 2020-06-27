@@ -67,7 +67,7 @@ def main():
         wrong_idx = torch.where(torch.max(logits, 1)[1].view(target.size()).data != target.data)[0]
         print('Incorrectly Classified Texts:')
         for idx in wrong_idx.cpu().detach().numpy():
-            print(f'{torch.argmax(logits[i]).cpu().detach().numpy()}({target[i]})', end=' ')
+            print(f'{torch.argmax(logits[idx]).cpu().detach().numpy()}({target[idx]})', end=' ')
             itos = test_dataiter.dataset.fields['text'].vocab.itos
             for i in feature[idx].cpu().detach().numpy():
                 print(itos[i], end='')
