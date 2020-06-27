@@ -12,6 +12,8 @@ torch.manual_seed(0)
 cfg = CN()
 cfg.CUDA = torch.cuda.is_available()
 cfg.DATASET_NAME = 'movie'
+cfg.FILTER_NUM = 100
+cfg.FILTER_SIZE = [3, 4, 5]
 cfg.EMBEDDING_DIM = 128
 cfg.PRETRAINED_EMBEDDING = True
 cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
