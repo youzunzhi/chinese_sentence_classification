@@ -10,7 +10,7 @@ def get_data_iter(cfg):
     label_field = data.Field(sequential=False, use_vocab=False)
     train_dataset, val_dataset, test_dataset = data.TabularDataset.splits(
         path=f'./dataset/{dataset_name}', train=f'{dataset_name}_train.csv',
-        validation=f'{dataset_name}_val.csv', test=f'{dataset_name}_test.csv', format='csv',
+        validation=f'{dataset_name}_val.csv', test=f'{dataset_name}_test_debug.csv', format='csv',
         fields=[('label', label_field), ('text', text_field)])
     if cfg.PRETRAINED_EMBEDDING:
         vectors = load_word_vectors(cfg.PRETRAINED_PATH)

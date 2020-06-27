@@ -67,6 +67,7 @@ def main():
         wrong_idx = torch.where(torch.max(logits, 1)[1].view(target.size()).data != target.data)[0]
         print('Incorrectly Classified Texts:')
         for i in wrong_idx.cpu().detach().numpy():
+            print(f'{torch.max(logits, 1)[1]}({target[i]})', end=' ')
             for t in test_dataiter.dataset.examples[i].text:
                 print(t, end='')
             print()
