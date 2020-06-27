@@ -4,7 +4,7 @@ import torch.nn.functional as F
 
 
 class TextCNN(nn.Module):
-    def __init__(self, cfg, embedding_vectors):
+    def __init__(self, cfg, embedding_vectors, load_path=None):
         super(TextCNN, self).__init__()
         self.cfg = cfg
 
@@ -27,6 +27,8 @@ class TextCNN(nn.Module):
             [nn.Conv2d(channel_num, filter_num, (size, embedding_dim)) for size in filter_sizes])
         self.dropout = nn.Dropout(cfg.DROPOUT_RATE)
         self.fc = nn.Linear(len(filter_sizes) * filter_num, class_num)
+        if load_path:
+            self.load_state_dict(torch.load(load_path))
 
     def forward(self, x):
         if self.embedding2:

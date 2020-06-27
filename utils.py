@@ -64,6 +64,22 @@ def log_info(log_str):
     logging.getLogger().info(log_str)
 
 
+def get_load_path(experiment_name):
+    def recursive_glob(rootdir=".", suffix=""):
+        """Performs recursive glob with given suffix and rootdir
+            :param rootdir is the root directory
+            :param suffix is the suffix to be searched
+        """
+        return [
+            os.path.join(looproot, filename)
+            for looproot, _, filenames in os.walk(rootdir)
+            for filename in filenames
+            if filename.endswith(suffix)
+        ]
+
+    return recursive_glob(f'outputs/{experiment_name}', 'pth')[0]
+
+
 def make_csv(dataset, split):
     ori_path = f'dataset/{dataset}/{dataset}_{split}'
     with open(ori_path, 'r') as fr:
