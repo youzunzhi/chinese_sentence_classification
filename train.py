@@ -76,7 +76,7 @@ def main():
             break
         else:
             not_improving_epochs += 1
-        log_info(f'Early stop, Test Acc with best model: {best_test_acc}')
+    log_info(f'Done. Test Acc with best model: {best_test_acc}')
 
 
 def evaluate(split, model, eval_dataiter, use_cuda):

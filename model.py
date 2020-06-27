@@ -19,7 +19,7 @@ class TextCNN(nn.Module):
         if cfg.PRETRAINED_EMBEDDING:
             self.embedding = self.embedding.from_pretrained(embedding_vectors, freeze=not cfg.FINETUNE_EMBEDDING)
         if cfg.MULTICHANNEL:
-            self.embedding2 = nn.Embedding(vocabulary_size, embedding_dim).from_pretrained(embedding_vectors, freeze=False)
+            self.embedding2 = nn.Embedding(vocabulary_size, embedding_dim).from_pretrained(embedding_vectors, freeze=True)
             channel_num += 1
         else:
             self.embedding2 = None
