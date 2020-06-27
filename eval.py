@@ -60,10 +60,11 @@ def main():
         feature = feature.data.t()
         if cfg.CUDA:
             feature, target = feature.cuda(), target.cuda()
-        logits = model(feature)
+        with torch.no_grad():
+            logits = model(feature)
         wrong_idx = torch.where(torch.max(logits, 1)[1].view(target.size()).data != target.data)[0]
         print('Incorrectly Classified Texts:')
-        for i in wrong_idx.numpy():
+        for i in wrong_idx.cpu().detach().numpy():
             for t in test_dataiter.dataset.examples[i].text:
                 print(t, end='')
             print()
