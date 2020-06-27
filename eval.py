@@ -46,7 +46,7 @@ elif cfg.EXPERIMENT_NAME == 'multichannel':
 cfg.BATCH_SIZE = 64     # useless
 cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
 cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
-
+print(cfg)
 
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)

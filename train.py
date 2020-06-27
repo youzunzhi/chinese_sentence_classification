@@ -73,11 +73,11 @@ def main():
             best_test_acc = evaluate('test', model, test_dataiter, cfg.CUDA)
             not_improving_epochs = 0
         elif not_improving_epochs >= 10:
-            log_info(f'Early stop, Test Acc with best model: {best_test_acc}')
+            log_info('Early stop.')
             break
         else:
             not_improving_epochs += 1
-    log_info(f'Done. Test Acc with best model: {best_test_acc}')
+    log_info(f'Test Acc with best model: {best_test_acc}')
 
 
 def evaluate(split, model, eval_dataiter, use_cuda):
