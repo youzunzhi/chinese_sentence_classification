@@ -74,7 +74,7 @@ def main():
     for epoch in range(1, cfg.TOTAL_EPOCHS + 1):
         model.train()
         for batch_i, batch in enumerate(train_dataiter):
-            start_time = time.time()
+            # start_time = time.time()
             feature, target = batch.text, batch.label
             feature = feature.data.t()
             if cfg.CUDA:
@@ -84,17 +84,17 @@ def main():
             loss = F.cross_entropy(logits, target)
             loss.backward()
             optimizer.step()
-            corrects_num = (torch.max(logits, 1)[1].view(target.size()).data == target.data).sum()
-            train_acc = 100.0 * corrects_num / batch.batch_size
-            log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
-                     f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
+            # corrects_num = (torch.max(logits, 1)[1].view(target.size()).data == target.data).sum()
+            # train_acc = 100.0 * corrects_num / batch.batch_size
+            # log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
+            #          f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
         val_acc = evaluate('val', model, val_dataiter, cfg.CUDA)[0]
         if best_acc < val_acc:
             best_acc = val_acc
             save_model_weights(model, cfg, epoch)
             best_test_performace = evaluate('test', model, test_dataiter, cfg.CUDA)
             not_improving_epochs = 0
-        elif not_improving_epochs >= 10:
+        elif not_improving_epochs >= 5:
             log_info('Early stop.')
             break
         else:
