@@ -101,7 +101,7 @@ def main():
             not_improving_epochs += 1
     b = best_test_performace
     log_info(f"Test Acc with best model: "
-             f"Acc {b[0]}, Precision {b[1]}, Recall {b[2]}, F1 {b[3]} "
+             f"Acc {b[0]:.4f}, Precision {b[1]:.4f}, Recall {b[2]:.4f}, F1 {b[3]:.4f} "
              f"(TP {b[4]}, TN {b[5]}, FP {b[6]}, FN {b[7]})")
 
 
