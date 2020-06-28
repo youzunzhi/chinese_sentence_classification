@@ -88,6 +88,7 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
                         print(itos[i], end='')
                 print()
     log_info(f"Eval on {split}: Acc {acc}, Precision {precision}, Recall {recall}, F1 {f1} (TP {tp}, TN {tn}, FP {fp}, FN {fn})")
+    return acc
 
 
 if __name__ == '__main__':

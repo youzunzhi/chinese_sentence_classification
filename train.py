@@ -26,7 +26,7 @@ cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
 cfg.FINETUNE_EMBEDDING = False
 cfg.MULTICHANNEL = False    # use 2 channels of word embedding
 # ---- Training Scheme ----
-cfg.TOTAL_EPOCHS = 256
+cfg.TOTAL_EPOCHS = 50
 cfg.LR = 0.001
 # ---------
 cfg.EXPERIMENT_NAME = f'pretrain'
