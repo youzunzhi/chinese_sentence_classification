@@ -28,7 +28,11 @@ class TextCNN(nn.Module):
         self.dropout = nn.Dropout(cfg.DROPOUT_RATE)
         self.fc = nn.Linear(len(filter_sizes) * filter_num, class_num)
         if load_path:
-            self.load_state_dict(torch.load(load_path))
+            if torch.cuda.is_available():
+                self.load_state_dict(torch.load(load_path))
+            else:
+                self.load_state_dict(torch.load(load_path, map_location=torch.device('cpu')))
+
 
     def forward(self, x):
         if self.embedding2:

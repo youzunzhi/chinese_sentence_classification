@@ -6,7 +6,7 @@ from data import get_data_iter
 from model import TextCNN
 from utils import log_info, get_load_path
 
-torch.manual_seed(0)
+torch.manual_seed(10)
 
 
 def main():
@@ -20,6 +20,7 @@ def main():
 
 def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
     model.eval()
+    print(model.convs[0].weight[0])
     for batch in eval_dataiter:
         feature, target = batch.text, batch.label
         feature = feature.data.t()
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     cfg.FINETUNE_EMBEDDING = False
     cfg.MULTICHANNEL = False  # use 2 channels of word embedding
     cfg.DROPOUT_RATE = 0.5
-    cfg.EXPERIMENT_NAME = f'baseline'
+    cfg.EXPERIMENT_NAME = f'multichannel'
     cfg.SHOW_MISTAKES = True
     # ---------
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)

@@ -14,7 +14,7 @@ torch.manual_seed(0)
 cfg = CN()
 cfg.CUDA = torch.cuda.is_available()
 cfg.BATCH_SIZE = 64
-cfg.DATASET_NAME = 'laptop'
+cfg.DATASET_NAME = 'movie'
 # ---- Model Definition ----
 cfg.FILTER_NUM = 100
 cfg.FILTER_SIZE = [3, 4, 5]
@@ -29,7 +29,7 @@ cfg.MULTICHANNEL = False    # use 2 channels of word embedding
 cfg.TOTAL_EPOCHS = 50
 cfg.LR = 0.001
 # ---------
-cfg.EXPERIMENT_NAME = f'pretrain'
+cfg.EXPERIMENT_NAME = f'multichannel'
 # ---------
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("opts", help="Modify configs using the command-line", default=None, nargs=argparse.REMAINDER)
@@ -92,9 +92,10 @@ def main():
         if best_acc < val_acc:
             best_acc = val_acc
             save_model_weights(model, cfg, epoch)
+            print(model.convs[0].weight[0])
             best_test_performace = evaluate('test', model, test_dataiter, cfg.CUDA)
             not_improving_epochs = 0
-        elif not_improving_epochs >= 5:
+        elif not_improving_epochs >= 10:
             log_info('Early stop.')
             break
         else:
