@@ -61,7 +61,12 @@ def setup_logger(cfg, log_prefix, distributed_rank=0):
 
 
 def log_info(log_str):
-    logging.getLogger().info(log_str)
+    logger = logging.getLogger()
+    if len(logger.handlers):
+        logger.info(log_str)
+    else:
+        print(log_str)
+
 
 
 def get_load_path(experiment_name):

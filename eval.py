@@ -1,10 +1,7 @@
-import os
-import time
 import torch
 import argparse
-import torch.nn.functional as F
 from yacs.config import CfgNode as CN
-import tqdm
+import numpy as np
 from data import get_data_iter
 from model import TextCNN
 from utils import handle_keyboard_interruption, handle_other_exception, setup_logger, log_info, get_load_path
@@ -20,7 +17,7 @@ cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
 cfg.FINETUNE_EMBEDDING = False
 cfg.MULTICHANNEL = False    # use 2 channels of word embedding
 cfg.DROPOUT_RATE = 0.5
-cfg.EXPERIMENT_NAME = f''
+cfg.EXPERIMENT_NAME = f'baseline'
 # ---------
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("opts", help="Modify configs using the command-line", default=None, nargs=argparse.REMAINDER)
@@ -46,38 +43,51 @@ elif cfg.EXPERIMENT_NAME == 'multichannel':
 else:
     raise NotImplementedError
 cfg.BATCH_SIZE = 64     # useless
+cfg.SHOW_MISTAKES = False
 cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
-cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
+# cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
 print(cfg)
+
 
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)
-    model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
+    # model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
+    model = TextCNN(cfg, embedding_vectors)
     if cfg.CUDA:
         model.cuda()
+    evaluate('test', model, test_dataiter, cfg.CUDA, cfg.SHOW_MISTAKES)
+
+
+def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
     model.eval()
-    corrects_num = 0
-    for batch in tqdm.tqdm(test_dataiter, desc='EVALUATING'):
+    for batch in eval_dataiter:
         feature, target = batch.text, batch.label
         feature = feature.data.t()
-        if cfg.CUDA:
-            feature, target = feature.cuda(), target.cuda()
+        if use_cuda:
+            feature = feature.cuda()
         with torch.no_grad():
             logits = model(feature)
-        wrong_idx = torch.where(torch.max(logits, 1)[1].view(target.size()).data != target.data)[0]
-        print('Incorrectly Classified Texts:')
-        for idx in wrong_idx.cpu().detach().numpy():
-            print(f'{torch.argmax(logits[idx]).cpu().detach().numpy()}({target[idx]})', end=' ')
-            itos = test_dataiter.dataset.fields['text'].vocab.itos
-            for i in feature[idx].cpu().detach().numpy():
-                if i != 1:
-                    print(itos[i], end='')
-            print()
-        corrects_num += (torch.max(logits, 1)[1].view(target.size()).data == target.data).sum()
-    size = len(test_dataiter.dataset)
-    accuracy = 100.0 * corrects_num / size
-    print(f"Eval on test: ACC {accuracy}({corrects_num}/{size})")
-    return accuracy
+        pred = torch.argmax(logits, dim=1)
+        pred, target = pred.cpu().numpy(), target.numpy()
+        tp = np.logical_and(pred == 1, pred == target).sum()
+        tn = np.logical_and(pred == 0, pred == target).sum()
+        fp = np.logical_and(pred == 1, pred != target).sum()
+        fn = np.logical_and(pred == 0, pred != target).sum()
+        acc = (tp+tn) / (tp+tn+fp+fn)
+        precision = tp / (tp+fp)
+        recall = tp / (tp+fn)
+        f1 = 2 * (precision * recall) / (precision + recall)
+        if show_mistakes:
+            wrong_idx = torch.where(torch.max(logits, 1)[1].view(target.size()).data != target.data)[0]
+            print('Incorrectly Classified Texts:')
+            for idx in wrong_idx.cpu().detach().numpy():
+                print(f'{torch.argmax(logits[idx]).cpu().detach().numpy()}({target[idx]})', end=' ')
+                itos = eval_dataiter.dataset.fields['text'].vocab.itos
+                for i in feature[idx].cpu().detach().numpy():
+                    if i != 1:
+                        print(itos[i], end='')
+                print()
+    log_info(f"Eval on {split}: Acc {acc}, Precision {precision}, Recall {recall}, F1 {f1} (TP {tp}, TN {tn}, FP {fp}, FN {fn})")
 
 
 if __name__ == '__main__':

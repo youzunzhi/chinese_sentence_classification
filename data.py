@@ -13,7 +13,7 @@ def get_data_iter(cfg):
         validation=f'{dataset_name}_val.csv', test=f'{dataset_name}_test.csv', format='csv',
         fields=[('label', label_field), ('text', text_field)])
     if cfg.PRETRAINED_EMBEDDING:
-        vectors = load_word_vectors(cfg.PRETRAINED_PATH)
+        vectors = Vectors(name=cfg.PRETRAINED_PATH)
         text_field.build_vocab(train_dataset, val_dataset, test_dataset, vectors=vectors)
         cfg.EMBEDDING_DIM = text_field.vocab.vectors.size()[-1]
     else:
