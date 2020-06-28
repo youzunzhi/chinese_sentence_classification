@@ -17,8 +17,10 @@ class TextCNN(nn.Module):
         embedding_dim = cfg.EMBEDDING_DIM
         self.embedding = nn.Embedding(vocabulary_size, embedding_dim)
         if cfg.PRETRAINED_EMBEDDING:
+            print('loading?')
             self.embedding = self.embedding.from_pretrained(embedding_vectors, freeze=not cfg.FINETUNE_EMBEDDING)
         if cfg.MULTICHANNEL:
+            print('multi?')
             self.embedding2 = nn.Embedding(vocabulary_size, embedding_dim).from_pretrained(embedding_vectors, freeze=True)
             channel_num += 1
         else:
