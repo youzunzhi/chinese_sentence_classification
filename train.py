@@ -19,7 +19,7 @@ cfg.DATASET_NAME = 'movie'
 cfg.FILTER_NUM = 100
 cfg.FILTER_SIZE = [3, 4, 5]
 cfg.EMBEDDING_DIM = 128
-cfg.DROPOUT_RATE = 0.5
+cfg.DROPOUT_RATE = 0
 # ---- Model Variation ----
 cfg.PRETRAINED_EMBEDDING = True
 cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
@@ -54,7 +54,7 @@ elif cfg.EXPERIMENT_NAME == 'multichannel':
     cfg.MULTICHANNEL = True
 else:
     raise NotImplementedError
-cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
+cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}_nodropout'
 cfg.OUTPUT_DIR = f'outputs/{cfg.EXPERIMENT_NAME}'
 
 os.makedirs('outputs/', exist_ok=True)

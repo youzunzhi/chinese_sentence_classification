@@ -27,7 +27,6 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
             feature = feature.cuda()
         with torch.no_grad():
             logits = model(feature)
-            print(logits)
         pred = torch.argmax(logits, dim=1)
         pred, target = pred.cpu().numpy(), target.numpy()
         tp = np.logical_and(pred == 1, pred == target).sum()
@@ -91,7 +90,7 @@ if __name__ == '__main__':
     else:
         raise NotImplementedError
     cfg.BATCH_SIZE = 64  # useless
-    cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
+    cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}_nodropout'
     cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
     print(cfg)
     main()
