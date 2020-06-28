@@ -69,7 +69,7 @@ def main():
         model.cuda()
     optimizer = torch.optim.Adam(model.parameters(), lr=cfg.LR)
 
-    best_acc, best_test_acc = 0, 0
+    best_acc = 0
     not_improving_epochs = 0
     for epoch in range(1, cfg.TOTAL_EPOCHS + 1):
         model.train()
@@ -88,18 +88,21 @@ def main():
             train_acc = 100.0 * corrects_num / batch.batch_size
             log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
                      f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
-        eval_acc = evaluate('val', model, val_dataiter, cfg.CUDA)
-        if best_acc < eval_acc:
-            best_acc = eval_acc
+        val_acc = evaluate('val', model, val_dataiter, cfg.CUDA)[0]
+        if best_acc < val_acc:
+            best_acc = val_acc
             save_model_weights(model, cfg, epoch)
-            best_test_acc = evaluate('test', model, test_dataiter, cfg.CUDA)
+            best_test_performace = evaluate('test', model, test_dataiter, cfg.CUDA)
             not_improving_epochs = 0
         elif not_improving_epochs >= 10:
             log_info('Early stop.')
             break
         else:
             not_improving_epochs += 1
-    log_info(f'Test Acc with best model: {best_test_acc}')
+    b = best_test_performace
+    log_info(f"Test Acc with best model: "
+             f"Acc {b[0]}, Precision {b[1]}, Recall {b[2]}, F1 {b[3]} "
+             f"(TP {b[4]}, TN {b[5]}, FP {b[6]}, FN {b[7]})")
 
 
 def save_model_weights(model, cfg, epoch):
