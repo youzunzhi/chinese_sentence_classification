@@ -12,6 +12,7 @@ torch.manual_seed(10)
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)
     model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
+    print(model.convs[0].weight[0])
     # model = TextCNN(cfg, embedding_vectors)
     if cfg.CUDA:
         model.cuda()
@@ -20,7 +21,6 @@ def main():
 
 def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
     model.eval()
-    print(model.convs[0].weight[0])
     for batch in eval_dataiter:
         feature, target = batch.text, batch.label
         feature = feature.data.t()
