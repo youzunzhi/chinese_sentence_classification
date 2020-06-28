@@ -64,6 +64,7 @@ if __name__ == '__main__':
     cfg.MULTICHANNEL = False  # use 2 channels of word embedding
     cfg.DROPOUT_RATE = 0.5
     cfg.EXPERIMENT_NAME = f'baseline'
+    cfg.SHOW_MISTAKES = True
     # ---------
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
     parser.add_argument("opts", help="Modify configs using the command-line", default=None, nargs=argparse.REMAINDER)
@@ -89,7 +90,6 @@ if __name__ == '__main__':
     else:
         raise NotImplementedError
     cfg.BATCH_SIZE = 64  # useless
-    cfg.SHOW_MISTAKES = False
     cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
     cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
     print(cfg)

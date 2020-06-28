@@ -86,6 +86,11 @@ def get_load_path(experiment_name):
 
 
 def make_csv(dataset, split):
+    """
+    for d in ['flight', 'laptop', 'movie']:
+        for s in ['train', 'val', 'test']:
+            make_csv(d, s)
+    """
     ori_path = f'dataset/{dataset}/{dataset}_{split}'
     with open(ori_path, 'r') as fr:
         with open(f'dataset/{dataset}/{dataset}_{split}.csv', 'w') as f:
@@ -96,8 +101,44 @@ def make_csv(dataset, split):
                 f.write(write_line)
 
 
-"""
-for d in ['flight', 'laptop', 'movie']:
-    for s in ['train', 'val', 'test']:
-        make_csv(d, s)
-"""
+def plot_comparison():
+    import matplotlib.pyplot as plt
+    import numpy as np
+    width = 0.3
+    labels = ['Acc', 'Precision', 'Recall', 'F1']
+    performance1 = [0.9448,	0.9365,	0.9543,	0.9453]
+    performance2 = [0.9416 , 0.9403 , 0.9432 , 0.9417]
+    performance1_label = 'Dropout (0.5)'
+    performance2_label = 'No Dropout'
+    dataset_name = 'flight'
+    x = np.arange(len(labels))  # the label locations
+
+    fig, ax = plt.subplots(1, 1, figsize=(10, 5))
+    rects1 = ax.bar(x - width / 2, performance1, width, label=performance1_label)
+    rects2 = ax.bar(x + width / 2, performance2, width, label=performance2_label)
+    ax.set_ylabel('Scores')
+    ax.set_title(f'Comparion of using Dropout or not on {dataset_name}')
+    ax.set_xticks(x)
+    ax.set_xticklabels(labels)
+    ax.legend(loc='center right')
+
+    def autolabel(rects):
+        """Attach a text label above each bar in *rects*, displaying its height."""
+        for rect in rects:
+            height = rect.get_height()
+            ax.annotate('{}'.format(height),
+                        xy=(rect.get_x() + rect.get_width() / 2, height),
+                        xytext=(0, 3),  # 3 points vertical offset
+                        textcoords="offset points",
+                        ha='center', va='bottom')
+
+    autolabel(rects1)
+    autolabel(rects2)
+
+    fig.set_tight_layout(True)
+    fig.show()
+    plt.close(fig)
+
+
+if __name__ == '__main__':
+    plot_comparison()
