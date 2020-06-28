@@ -12,7 +12,6 @@ torch.manual_seed(0)
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)
     model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
-    # model = TextCNN(cfg, embedding_vectors)
     if cfg.CUDA:
         model.cuda()
     evaluate('test', model, test_dataiter, cfg.CUDA, cfg.SHOW_MISTAKES)

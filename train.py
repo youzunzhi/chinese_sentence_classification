@@ -99,10 +99,6 @@ def main():
             break
         else:
             not_improving_epochs += 1
-#         if epoch == 4:
-#             save_model_weights(model, cfg, epoch)
-#             best_test_performace = evaluate('test', model, test_dataiter, cfg.CUDA)
-#             break
     b = best_test_performace
     log_info(f"{cfg.EXPERIMENT_NAME} Best model: \n"
              f"Acc {b[0]:.4f} Precision {b[1]:.4f} Recall {b[2]:.4f} F1 {b[3]:.4f}\n"

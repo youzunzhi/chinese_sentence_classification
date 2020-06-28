@@ -32,12 +32,8 @@ class TextCNN(nn.Module):
                 self.load_state_dict(torch.load(load_path))
             else:
                 self.load_state_dict(torch.load(load_path, map_location=torch.device('cpu')))
-#         print(self.embedding.weight)
-#         torch.save(self.embedding.weight,'eei.pt')
 
     def forward(self, x):
-#         if not self.training:
-#             torch.save(self.embedding.weight,'ee.pt')
         if self.embedding2:
             x = torch.stack([self.embedding(x), self.embedding2(x)], dim=1)
         else:
