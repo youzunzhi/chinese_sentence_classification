@@ -38,10 +38,10 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
         recall = tp / (tp+fn)
         f1 = 2 * (precision * recall) / (precision + recall)
         if show_mistakes:
-            wrong_idx = torch.where(torch.max(logits, 1)[1].view(target.size()).data != target.data)[0]
+            wrong_idx = np.where(pred != target)[0]
             print('Incorrectly Classified Texts:')
-            for idx in wrong_idx.cpu().detach().numpy():
-                print(f'{torch.argmax(logits[idx]).cpu().detach().numpy()}({target[idx]})', end=' ')
+            for idx in wrong_idx:
+                print(f'{pred[idx]}({target[idx]})', end=' ')
                 itos = eval_dataiter.dataset.fields['text'].vocab.itos
                 for i in feature[idx].cpu().detach().numpy():
                     if i != 1:
