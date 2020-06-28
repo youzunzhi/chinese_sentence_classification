@@ -101,8 +101,8 @@ def main():
             not_improving_epochs += 1
     b = best_test_performace
     log_info(f"{cfg.EXPERIMENT_NAME} Best model: \n"
-             f"Acc {b[0]:.4f}, Precision {b[1]:.4f}, Recall {b[2]:.4f}, F1 {b[3]:.4f}\n"
-             f"(TP {b[4]}, TN {b[5]}, FP {b[6]}, FN {b[7]})")
+             f"Acc {b[0]:.4f} Precision {b[1]:.4f} Recall {b[2]:.4f} F1 {b[3]:.4f}\n"
+             f"(TP {b[4]} TN {b[5]} FP {b[6]} FN {b[7]})")
 
 
 def save_model_weights(model, cfg, epoch):
