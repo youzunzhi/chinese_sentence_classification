@@ -54,7 +54,7 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
 if __name__ == '__main__':
     cfg = CN()
     cfg.CUDA = torch.cuda.is_available()
-    cfg.DATASET_NAME = 'movie'
+    cfg.DATASET_NAME = 'flight'
     cfg.FILTER_NUM = 100
     cfg.FILTER_SIZE = [3, 4, 5]
     cfg.EMBEDDING_DIM = 128
@@ -63,7 +63,7 @@ if __name__ == '__main__':
     cfg.FINETUNE_EMBEDDING = False
     cfg.MULTICHANNEL = False  # use 2 channels of word embedding
     cfg.DROPOUT_RATE = 0.5
-    cfg.EXPERIMENT_NAME = f'multichannel'
+    cfg.EXPERIMENT_NAME = f'baseline'
     cfg.SHOW_MISTAKES = True
     # ---------
     parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
@@ -90,7 +90,7 @@ if __name__ == '__main__':
     else:
         raise NotImplementedError
     cfg.BATCH_SIZE = 64  # useless
-    cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}_nodropout'
+    cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
     cfg.LOAD_PATH = get_load_path(cfg.EXPERIMENT_NAME)
     print(cfg)
     main()

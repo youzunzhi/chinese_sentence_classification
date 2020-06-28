@@ -19,7 +19,7 @@ cfg.DATASET_NAME = 'movie'
 cfg.FILTER_NUM = 100
 cfg.FILTER_SIZE = [3, 4, 5]
 cfg.EMBEDDING_DIM = 128
-cfg.DROPOUT_RATE = 0
+cfg.DROPOUT_RATE = 0.5
 # ---- Model Variation ----
 cfg.PRETRAINED_EMBEDDING = True
 cfg.PRETRAINED_PATH = 'pretrained/sgns.zhihu.word'
@@ -29,7 +29,7 @@ cfg.MULTICHANNEL = False    # use 2 channels of word embedding
 cfg.TOTAL_EPOCHS = 50
 cfg.LR = 0.001
 # ---------
-cfg.EXPERIMENT_NAME = f'multichannel'
+cfg.EXPERIMENT_NAME = f'baseline'
 # ---------
 parser = argparse.ArgumentParser(formatter_class=argparse.ArgumentDefaultsHelpFormatter)
 parser.add_argument("opts", help="Modify configs using the command-line", default=None, nargs=argparse.REMAINDER)
@@ -54,7 +54,7 @@ elif cfg.EXPERIMENT_NAME == 'multichannel':
     cfg.MULTICHANNEL = True
 else:
     raise NotImplementedError
-cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}_nodropout'
+cfg.EXPERIMENT_NAME += f'_{cfg.DATASET_NAME}'
 cfg.OUTPUT_DIR = f'outputs/{cfg.EXPERIMENT_NAME}'
 
 os.makedirs('outputs/', exist_ok=True)
@@ -89,17 +89,20 @@ def main():
             # log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
             #          f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
         val_acc = evaluate('val', model, val_dataiter, cfg.CUDA)[0]
-        # val_acc=1
         if best_acc < val_acc:
             best_acc = val_acc
             save_model_weights(model, cfg, epoch)
             best_test_performace = evaluate('test', model, test_dataiter, cfg.CUDA)
             not_improving_epochs = 0
         elif not_improving_epochs >= 10:
-            log_info('Early stop.')
+            log_info(f'Early stop at epoch {epoch}')
             break
         else:
             not_improving_epochs += 1
+#         if epoch == 4:
+#             save_model_weights(model, cfg, epoch)
+#             best_test_performace = evaluate('test', model, test_dataiter, cfg.CUDA)
+#             break
     b = best_test_performace
     log_info(f"{cfg.EXPERIMENT_NAME} Best model: \n"
              f"Acc {b[0]:.4f} Precision {b[1]:.4f} Recall {b[2]:.4f} F1 {b[3]:.4f}\n"
