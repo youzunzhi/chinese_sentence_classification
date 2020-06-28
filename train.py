@@ -1,10 +1,8 @@
 import os
-import time
 import torch
 import argparse
 import torch.nn.functional as F
 from yacs.config import CfgNode as CN
-import tqdm
 from data import get_data_iter
 from model import TextCNN
 from utils import handle_keyboard_interruption, handle_other_exception, setup_logger, log_info
