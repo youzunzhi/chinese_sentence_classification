@@ -6,13 +6,12 @@ from data import get_data_iter
 from model import TextCNN
 from utils import log_info, get_load_path
 
-torch.manual_seed(10)
+torch.manual_seed(0)
 
 
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)
     model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
-    print(model.convs[0].weight[0])
     # model = TextCNN(cfg, embedding_vectors)
     if cfg.CUDA:
         model.cuda()
@@ -27,6 +26,7 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
         if use_cuda:
             feature = feature.cuda()
         with torch.no_grad():
+            print(feature)
             logits = model(feature)
         pred = torch.argmax(logits, dim=1)
         pred, target = pred.cpu().numpy(), target.numpy()
