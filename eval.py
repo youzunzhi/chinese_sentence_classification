@@ -26,8 +26,8 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
         if use_cuda:
             feature = feature.cuda()
         with torch.no_grad():
-            print(feature)
             logits = model(feature)
+            print(logits)
         pred = torch.argmax(logits, dim=1)
         pred, target = pred.cpu().numpy(), target.numpy()
         tp = np.logical_and(pred == 1, pred == target).sum()

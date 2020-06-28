@@ -88,8 +88,8 @@ def main():
             # train_acc = 100.0 * corrects_num / batch.batch_size
             # log_info(f"Epoch {epoch}/{cfg.TOTAL_EPOCHS}, Batch {batch_i}/{len(train_dataiter)}, Loss {loss.data}, "
             #          f"Train Acc {train_acc}({corrects_num}/{batch.batch_size}), Time {time.time()-start_time}s")
-        # val_acc = evaluate('val', model, val_dataiter, cfg.CUDA)[0]
-        val_acc=1
+        val_acc = evaluate('val', model, val_dataiter, cfg.CUDA)[0]
+        # val_acc=1
         if best_acc < val_acc:
             best_acc = val_acc
             save_model_weights(model, cfg, epoch)
