@@ -1,3 +1,14 @@
+import torch
+import argparse
+from yacs.config import CfgNode as CN
+import numpy as np
+from data import get_data_iter
+from model import TextCNN
+from utils import log_info, get_load_path
+
+torch.manual_seed(0)
+
+
 def main():
     _, _, test_dataiter, embedding_vectors = get_data_iter(cfg)
     model = TextCNN(cfg, embedding_vectors, cfg.LOAD_PATH)
@@ -41,15 +52,6 @@ def evaluate(split, model, eval_dataiter, use_cuda, show_mistakes=False):
 
 
 if __name__ == '__main__':
-    import torch
-    import argparse
-    from yacs.config import CfgNode as CN
-    import numpy as np
-    from data import get_data_iter
-    from model import TextCNN
-    from utils import log_info, get_load_path
-
-    torch.manual_seed(0)
     cfg = CN()
     cfg.CUDA = torch.cuda.is_available()
     cfg.DATASET_NAME = 'movie'
